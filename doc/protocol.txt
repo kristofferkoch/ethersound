@@ -1,0 +1,63 @@
+Header:
+
+dddddd
+ssssss
+tt
+mm
+
+d: Destination mac address
+s: Source mac address
+t: etertype (0x88b5, experimental)
+m: magic protocol id (0xf00d)
+
+Field:
+
+iil
+d...
+
+ii: Field id (1..)
+l: Field length
+d: Field data
+
+Audio:
+
+0
+iiijjjAkkkB
+....
+CCCC<eop>
+
+0: 0x00 ("field id")
+i,j,k: channel 1,2,3 sample data
+A: checksum for channel 1 and 2
+B: checksum for channel 3
+C: ethernet CRC
+
+Fields (meaning for sender):
+1: My time is xxx when I sent this package (in nanoseconds since some arbitrary epoch)
+2: I received your time xxx (in field-id 1) in your last package
+3: My time was xxx when I got your last package with time
+4: You shall step your time to match mine with xxx (signed, 64bit)
+5: Adjust your clock-rate xxx ppm (signed)
+6: I had a buffer overrun of xxx samples
+7: I had a buffer underrun of xxx samples
+8: I received xxx samples with bad crc
+9: I can play xxx channels of audio
+10: I have xxx rec-channels
+11: My sample clock is xxx Hz
+12: Set your sample clock to xxx Hz
+13: My buffersize is xxx frames
+14: My buffer is xxx frames full
+15: Audio in this packet starts at time xxx
+16: Audio in this packet was recorded at time xxx
+17: Command buffer overflow
+
+Registers:
+	Time-register:
+		74 bit. in 1024ths of nanoseconds
+		For example on a 50Mhz, this register
+		is increased with 20*1024 every clock-cycle
+		With adjusted clock 50Mhz + 15.625ppm, this
+		register is increased 20*1024+16 every clock cycle
+
+Frame-clock: edges everytime the time-register
+		       
